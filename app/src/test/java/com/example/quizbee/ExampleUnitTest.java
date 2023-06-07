@@ -35,11 +35,5 @@ public class ExampleUnitTest {
         assertNotNull(quizList);
         assertFalse(quizList.isEmpty());
         System.out.println(new Gson().toJson(quizList));
-
-
-
-
     }
-
-
 }
