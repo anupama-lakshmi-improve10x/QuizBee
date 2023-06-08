@@ -36,13 +36,17 @@ public class QuestionsActivity extends AppCompatActivity {
         fetchQuestions();
         setUpQuestionAdaptor();
         setUpQuestionsRv();
-
-
     }
 
     private void setUpQuestionAdaptor() {
         questionAdapter = new QuestionAdapter();
         questionAdapter.setData(new ArrayList<>());
+        questionAdapter.OnItemActionListener(new OnItemActionListener() {
+            @Override
+            public void onClicked(Question question) {
+                showData(question);
+            }
+        });
     }
 
     private void setUpQuestionsRv() {
@@ -60,6 +64,7 @@ public class QuestionsActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     questions = response.body().get(0).getQuestions();
                     questionAdapter.setData(questions);
+                    showData(questions.get(0));
                     Toast.makeText(QuestionsActivity.this, "success", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -67,8 +72,15 @@ public class QuestionsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Quiz>> call, Throwable t) {
                 Toast.makeText(QuestionsActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-
             }
         });
+    }
+
+    private void showData(Question question) {
+        binding.questionTxt.setText(question.getQuestion());
+        binding.ansRbtn1.setText(question.getAnswers().get(0));
+        binding.ansRbtn2.setText(question.getAnswers().get(1));
+        binding.ansRbtn3.setText(question.getAnswers().get(2));
+        binding.ansRb4.setText(question.getAnswers().get(3));
     }
 }

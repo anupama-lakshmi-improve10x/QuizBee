@@ -16,9 +16,15 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionViewHolder> {
 
     private List<Question> questions;
 
+    private OnItemActionListener onItemActionListener;
+
     void setData(List<Question> questions) {
         this.questions = questions;
         notifyDataSetChanged();
+    }
+
+    void OnItemActionListener(OnItemActionListener onItemActionListener){
+        this.onItemActionListener = onItemActionListener;
     }
 
     @NonNull
@@ -33,6 +39,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionViewHolder> {
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         Question questionList = questions.get(position);
         holder.binding.numberTxt.setText(String.valueOf(position +1));
+        holder.binding.getRoot().setOnClickListener(v -> {
+            onItemActionListener.onClicked(questionList);
+        });
     }
 
     @Override
