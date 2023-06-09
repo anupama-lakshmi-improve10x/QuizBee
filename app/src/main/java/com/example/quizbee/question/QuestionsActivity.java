@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.quizbee.R;
 import com.example.quizbee.databinding.ActivityQuestionsBinding;
 import com.example.quizbee.model.Question;
 import com.example.quizbee.model.Quiz;
@@ -28,7 +30,9 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private QuestionAdapter questionAdapter;
 
-    private int currentQuestion = 0;
+    private int currentQuestionPosition = 0;
+
+    private Integer[] answerOptionsIndexes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class QuestionsActivity extends AppCompatActivity {
         setUpQuestionsRv();
         setNextBtn();
         setPreviousBtn();
+        handleRadioGroup();
     }
 
     private void setUpQuestionAdaptor() {
@@ -69,6 +74,7 @@ public class QuestionsActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     questions = response.body().get(0).getQuestions();
                     questionAdapter.setData(questions);
+                    answerOptionsIndexes = new Integer[questions.size()];
                     showData(questions.get(0));
                     Toast.makeText(QuestionsActivity.this, "success", Toast.LENGTH_SHORT).show();
                 }
@@ -82,21 +88,21 @@ public class QuestionsActivity extends AppCompatActivity {
     }
 
     private void showData(Question question) {
-        binding.questionTxt.setText(question.getQuestion());
-        binding.ansRbtn1.setText(question.getAnswers().get(0));
-        binding.ansRbtn2.setText(question.getAnswers().get(1));
-        binding.ansRbtn3.setText(question.getAnswers().get(2));
-        binding.ansRb4.setText(question.getAnswers().get(3));
+        // Load the question and answer
+        setQuestions(question);
+        //Highlight the question Number and previous question
+        setColor(question);
+        //Handle the previous button visibility
+        setPreviousBtnVisibility();
+        //Handle the next button visibility
+       setNextBtnVisibility();
     }
     private void setNextBtn() {
             binding.nextBtn.setOnClickListener(v -> {
                 try {
-                    currentQuestion = questionAdapter.currentQuestionPosition;
-                    currentQuestion++;
-                    Question question = questions.get(currentQuestion-1);
+                    currentQuestionPosition++;
+                    Question question = questions.get(currentQuestionPosition);
                     showData(question);
-                    questionAdapter.currentQuestionPosition = currentQuestion;
-                    questionAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     Toast.makeText(this, "Questions Completed", Toast.LENGTH_SHORT).show();
                 }
@@ -106,17 +112,70 @@ public class QuestionsActivity extends AppCompatActivity {
         private void setPreviousBtn() {
         binding.previousBtn.setOnClickListener(v -> {
             try{
-                currentQuestion = questionAdapter.currentQuestionPosition;
-                currentQuestion--;
-                Question question = questions.get(currentQuestion);
+                currentQuestionPosition--;
+                Question question = questions.get(currentQuestionPosition);
                 showData(question);
-                questionAdapter.currentQuestionPosition = currentQuestion;
-                questionAdapter.notifyDataSetChanged();
-                if(currentQuestion == 0){
-                    binding.previousBtn.setVisibility(View.GONE);
-                }
             } catch (Exception e) {
                 Toast.makeText(this, "No questions", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setQuestions(Question question) {
+        binding.questionTxt.setText(question.getQuestion());
+        binding.radioGroupRg.clearCheck();
+        binding.ansRbtn1.setText(question.getAnswers().get(0));
+        binding.ansRbtn2.setText(question.getAnswers().get(1));
+        binding.ansRbtn3.setText(question.getAnswers().get(2));
+        binding.ansRb4.setText(question.getAnswers().get(3));
+        if(answerOptionsIndexes[currentQuestionPosition] != null) {
+            if(answerOptionsIndexes[currentQuestionPosition] == 0) {
+                binding.ansRbtn1.setChecked(true);
+            } else if (answerOptionsIndexes[currentQuestionPosition] == 1) {
+                binding.ansRbtn2.setChecked(true);
+            } else if(answerOptionsIndexes[currentQuestionPosition] == 2) {
+                binding.ansRbtn3.setChecked(true);
+            } else if(answerOptionsIndexes[currentQuestionPosition] == 3) {
+                binding.ansRb4.setChecked(true);
+            }
+        }
+    }
+
+    private void setColor(Question question) {
+        currentQuestionPosition = question.getNumber()-1;
+        questionAdapter.currentQuestionPosition = this.currentQuestionPosition;
+        questionAdapter.notifyDataSetChanged();
+    }
+
+    private void setPreviousBtnVisibility() {
+        if(currentQuestionPosition == 0){
+            binding.previousBtn.setVisibility(View.INVISIBLE);
+        } else {
+            binding.previousBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setNextBtnVisibility() {
+        if(currentQuestionPosition == questions.size()-1) {
+            binding.nextBtn.setVisibility(View.INVISIBLE);
+        } else {
+            binding.nextBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void handleRadioGroup() {
+        binding.radioGroupRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+               if(binding.ansRbtn1.isChecked()) {
+                   answerOptionsIndexes[currentQuestionPosition] = 0;
+               } else if(binding.ansRbtn2.isChecked()) {
+                   answerOptionsIndexes[currentQuestionPosition] = 1;
+               } else if(binding.ansRbtn3.isChecked()) {
+                   answerOptionsIndexes[currentQuestionPosition] = 2;
+               } else if(binding.ansRb4.isChecked()) {
+                   answerOptionsIndexes[currentQuestionPosition] = 3;
+               }
             }
         });
     }

@@ -44,8 +44,6 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionViewHolder> {
         Question questionList = questions.get(position);
         holder.binding.numberTxt.setText(String.valueOf(position +1));
         holder.binding.getRoot().setOnClickListener(v -> {
-            currentQuestionPosition = position;
-            notifyDataSetChanged();
             onItemActionListener.onClicked(questionList);
         });
         if(currentQuestionPosition == position) {

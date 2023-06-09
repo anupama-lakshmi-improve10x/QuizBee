@@ -25,38 +25,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/number_rv" />
 
-    <RadioButton
-        android:id="@+id/ans_rbtn1"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/radioGroup_rg"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="RadioButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/question_txt" />
+        app:layout_constraintTop_toBottomOf="@+id/question_txt">
 
-    <RadioButton
-        android:id="@+id/ans_rbtn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RadioButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ans_rbtn1" />
+        <RadioButton
+            android:id="@+id/ans_rbtn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RadioButton" />
 
-    <RadioButton
-        android:id="@+id/ans_rbtn3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RadioButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ans_rbtn2" />
+        <RadioButton
+            android:id="@+id/ans_rbtn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RadioButton" />
 
-    <RadioButton
-        android:id="@+id/ans_rb4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RadioButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ans_rbtn3" />
+        <RadioButton
+            android:id="@+id/ans_rbtn3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/ans_rb4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RadioButton" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/next_btn"
@@ -67,7 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/previous_btn"
-        app:layout_constraintTop_toBottomOf="@+id/ans_rb4" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_rg" />
 
     <Button
         android:id="@+id/previous_btn"
@@ -77,6 +77,6 @@
         android:text="Previous"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ans_rb4" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_rg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
