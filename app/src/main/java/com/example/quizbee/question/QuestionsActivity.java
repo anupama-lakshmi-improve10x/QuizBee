@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.quizbee.databinding.ActivityQuestionsBinding;
@@ -27,6 +28,8 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private QuestionAdapter questionAdapter;
 
+    private int currentQuestion = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,8 @@ public class QuestionsActivity extends AppCompatActivity {
         fetchQuestions();
         setUpQuestionAdaptor();
         setUpQuestionsRv();
+        setNextBtn();
+        setPreviousBtn();
     }
 
     private void setUpQuestionAdaptor() {
@@ -82,5 +87,37 @@ public class QuestionsActivity extends AppCompatActivity {
         binding.ansRbtn2.setText(question.getAnswers().get(1));
         binding.ansRbtn3.setText(question.getAnswers().get(2));
         binding.ansRb4.setText(question.getAnswers().get(3));
+    }
+    private void setNextBtn() {
+            binding.nextBtn.setOnClickListener(v -> {
+                try {
+                    currentQuestion = questionAdapter.currentQuestionPosition;
+                    currentQuestion++;
+                    Question question = questions.get(currentQuestion-1);
+                    showData(question);
+                    questionAdapter.currentQuestionPosition = currentQuestion;
+                    questionAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Questions Completed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        private void setPreviousBtn() {
+        binding.previousBtn.setOnClickListener(v -> {
+            try{
+                currentQuestion = questionAdapter.currentQuestionPosition;
+                currentQuestion--;
+                Question question = questions.get(currentQuestion);
+                showData(question);
+                questionAdapter.currentQuestionPosition = currentQuestion;
+                questionAdapter.notifyDataSetChanged();
+                if(currentQuestion == 0){
+                    binding.previousBtn.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, "No questions", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
